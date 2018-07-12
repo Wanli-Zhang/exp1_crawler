@@ -1,6 +1,0 @@
-The 1 ask processed in 0.002113 seconds
-                1 epoll_wait has been processed.
-                 Queue Size : 0
-The 3 ask processed in 0.000025 seconds
-                         0 epoll_wait has been processed.
-                         Queue Size : 0
