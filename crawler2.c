@@ -1,13 +1,11 @@
-
 #include "url2.h"
 #include "http2.h"
 #include "dns.h"
 #include <netdb.h>
-
+#include <string.h>
 
 
 #define MAX_QUEUE_SIZE 200000
-#define buff 1024
 
 
 struct epoll_event ev, events[2560];	//ev用于注册事件，events数组用于回传要处理的事件
@@ -23,6 +21,7 @@ FILE *ffp;
 
 void putlinks2queue(char *links, int count);
 void addurl2queue(Url * url);
+
 extern void ngethostbyname(unsigned char* , unsigned char*);
 extern void get_dns_servers();
 
@@ -36,7 +35,7 @@ int main(int argc, char *argv[]){
 
 
 	tree = tr_alloc();
-	char text[buff];
+	
 
 	/*dns*/
     get_dns_servers();
@@ -95,7 +94,8 @@ int main(int argc, char *argv[]){
         start = clock();
 
 		n = epoll_wait(epfd, events, 2560, 100000);	/*等待sockfd可读，即等待http response */
-		if((n == 0) && (url_queue.size() == 0)){
+		if((n == 0) && (url_queue.size() == 0))
+        {
             finish = clock();
             duration = (double)(finish - start) / CLOCKS_PER_SEC;
             printf("epoll_wail call : %d times\n \
@@ -105,36 +105,25 @@ int main(int argc, char *argv[]){
                         %d epoll_wait has been processed.\n \
                         Queue Size : %d\n", ++ask_num, duration, n, 					url_queue.size());
             return 0;
-    }
-    printf("有%d个sockfd准备就绪\n", n);
-    
-    for (i = 0; i < n; ++i) {
-        Ev_arg *arg = (Ev_arg *) (events[i].data.ptr);
-
-        Url *url = arg->url;
-        int fd = arg->fd;
-
-        int read_length = 0, eachRead = 0;
-        memset(buf, 0, MAX_RECV_SIZE);
-        int j = 0;
-        while((eachRead = read(fd, text, buff)) > 0)  //读
-        {
-            strcat(buf, text);
-            printf("len = %d ", strlen(text));
-            memset(text, '\0', buff);
-            read_length += eachRead;
-            printf("%d %d\n",++j, eachRead);
-//            usleep(500*1000);
         }
+        printf("有%d个sockfd准备就绪\n", n);
+        
+        for (i = 0; i < n; ++i)
+        {
+            Ev_arg *arg = (Ev_arg *) (events[i].data.ptr);
+            Url * url = arg->url;
+            int fd = arg->fd;
 
-        printf("读完了%d\n%s", strlen(buf), buf);
-        printf("Has crawled %d pages.\n", ++page_num);
+            recvResponse(arg, buf);
+            
+            printf("读完了%d\n%s", strlen(buf), buf);
+            printf("Has crawled %d pages.\n", ++page_num);
 
-        if(urlsNum <= 160000) extractLink(buf, url->domain, url->number);
-        close(fd);
+            if(urlsNum <= 160000) extractLink(buf, url->domain, url->number);
+            close(fd);
 
-        connect_pending--;
-    }
+            connect_pending--;
+        }
 /*
             while (1) {
                 need = sizeof(buf) - 1 - ll;
@@ -274,4 +263,8 @@ void addurl2queue(Url * url)
 	url_queue.push(url);
 	printf("%s%s已放入待爬取队列\n",url->domain,url->path);
 }
+
+
+
+
 
