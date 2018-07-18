@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -O3 -march=native -Wall -g
+CFLAGS = -O3 -march=native -Wall -g -std=c++11
 
 crawler2: crawler2.o
 	$(CC) -o $@ $< -levent -lz
