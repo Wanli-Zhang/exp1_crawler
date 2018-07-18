@@ -7,7 +7,9 @@
 
 #define MAX_QUEUE_SIZE 200000
 
-
+/*zhushi*/
+/*zhushi!!!*/
+/*zhushi3*/
 struct epoll_event ev, events[2560];	//ev用于注册事件，events数组用于回传要处理的事件
 queue < Url * >url_queue;
 int epfd;
