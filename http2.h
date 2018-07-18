@@ -124,6 +124,10 @@ int hex2dec(char* hex);
 char * my_strstr(char * str1, const int size1, const char * str2, const int size2);
 bool all_hex_char(char* str, int l, int r);
 
+// 0: 正常返回
+//-1: HTTP Response非200OK
+// 1: 数据无法通过gzip解压
+// 2: 传输超时
 int recvResponse(Ev_arg* arg, char* buf)
 {
     char text[buff];
@@ -141,7 +145,7 @@ int recvResponse(Ev_arg* arg, char* buf)
     bool is_gzip = false;
     bool is_chunked = false;
     bool res200ok = false;
-    int timeout = 1000;
+    int timeout = 10000;
     while(!http_end && timeout>0)  //读
     {
         eachRead = read(fd, text, buff);
@@ -247,7 +251,10 @@ int recvResponse(Ev_arg* arg, char* buf)
         read_length += eachRead;
     }
     //        printf("buf_len=%d, read_length-body_start_pos=%d, total chunk size=%d\n", buf_len, read_length-max_body_start_pos, total_chunk_size);
-    
+    if (timeout <= 0)
+    {
+        return 2;
+    }
     
     if (is_chunked)
     {
