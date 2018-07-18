@@ -164,16 +164,13 @@ void linkRelationship(char* newLink, int currentNum){
 		fclose(fp);
 	}
 	else{ //不存在 
-		//printf("bloom判断不存在\n");
+		
 		if(urlsNum < MAX_LINK){ 
 			printf("bloom判断不存在\n");
 			strcpy(links[urlsNum], newLink);//插入链接列表 
-	
-	
+			
 			fprintf(ffp, "%d %s\n", urlsNum, links[urlsNum]);
 	
-			printf("urlsNum %d\n",urlsNum);
-
 			int i;
 			printf("当前链接列表：\n");
 			for(i=0;i<=urlsNum;i++){
@@ -203,12 +200,17 @@ int extractLink(char* currentpage, char* domain, int currentNum){
     char currentchar;
     char urlbuf[MAX_PATH_LENGTH];
     char *searchedurl;
-    
+
+    FILE *fp;
+    fp = fopen("page.txt","a");
+    fprintf(fp, "%s", currentpage);
+    fclose(fp);
+
     
     while(currentpage[i] != '\0'){
     	currentchar = currentpage[i];
     	switch(state){
-    			case 0:if(currentchar == '<'){
+    		case 0:if(currentchar == '<'){
                            state=1; break;
                        } else {
                            state=0; j=0; break;
@@ -275,7 +277,7 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                         }
                 case 8:if(currentchar == '"'){
                            state=9; break;
-                       } else if(currentchar=='>') {
+                       } else  if(currentchar=='>') {
                            state=0; j=0; break;
                        } else {
                            state=8;
@@ -286,10 +288,11 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                        state=0;
                        int len1 = strlen(urlbuf);
                        int len2 = strlen(domain);
-                       printf("urlbuf:%s\n",urlbuf);
+                       //printf("urlbuf:%s\n",urlbuf);
                        //提取以http开头的超链接，如果以http开头去掉"http://",如果以'/'开头加上domain 
-                       if(strncmp(urlbuf, "http://news.sogou.com", 21) == 0){
-                            searchedurl=(char*)malloc(len1 - 7 + 1);
+                       if(strncmp(urlbuf, "http://news.cctv.com", 20) == 0){
+                            searchedurl=(char*)malloc(sizeof(char)*(len1 - 7 + 1));
+			    			memset(searchedurl,0,sizeof(char)*(len1 - 7 + 1));
                             int copy_i = 0;
                             for(copy_i = 0; urlbuf[copy_i + 7] != '\0'; copy_i++){
                                 searchedurl[copy_i] = urlbuf[copy_i + 7];
@@ -303,35 +306,29 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                             state=0;
                             j=0;
                        }
-//                       if(strncmp(urlbuf, "http", 4) == 0){
-//                            searchedurl=(char*)malloc(len1 - 7 + 1);
-//                            int copy_i = 0;
-//                            for(copy_i = 0; urlbuf[copy_i + 7] != '\0'; copy_i++){
-//                                searchedurl[copy_i] = urlbuf[copy_i + 7];
-//                            }
-//                            searchedurl[copy_i] = '\0';
-//                            //putlinks2queue(&searchedurl, 1);
-//                            printf("1..searchedurl:%s\n",searchedurl);
-//                            state=0;
-//                            j=0;
-//                       }
-					   else if(strncmp(urlbuf, "/", 1) == 0){
-					   		searchedurl=(char*)malloc(len1 + len2 + 1);
-					   		int copy_j = 0;
-					   		for(copy_j =0; copy_j < len2; copy_j++){
-					   			searchedurl[copy_j] = domain[copy_j];
-					   		}
-					   		for(copy_j =0; copy_j < len1; copy_j++){
-					   			searchedurl[len2 + copy_j] = urlbuf[copy_j];
-					   		}
-					   		searchedurl[copy_j] = '\0';
-                            //putlinks2queue(&searchedurl, 1);
-                            printf("2 进入extract提取链接\n"); 
-                            printf("searchedurl:%s\n",searchedurl);
-                            linkRelationship(searchedurl, currentNum);
-                            
-                            state=0;
-                            j=0;
+
+						else if(strncmp(urlbuf, "/", 1) == 0){
+							
+							searchedurl=(char*)malloc(sizeof(char)*(len1 +len2 + 1));
+							memset(searchedurl,0,sizeof(char)*(len1 +len2 + 1));
+							int copy_j = 0;
+							for(copy_j =0; copy_j < len2; copy_j++){
+								searchedurl[copy_j] = domain[copy_j];	
+							}
+							
+							for(copy_j =0; copy_j < len1; copy_j++){
+								searchedurl[len2 + copy_j] = urlbuf[copy_j];
+							}
+							
+							searchedurl[len1+len2] = '\0';
+			                           
+			                printf("2 进入extract提取链接\n"); 
+			                printf("searchedurl:%s\n",searchedurl);
+			                linkRelationship(searchedurl, currentNum);
+			                            
+			                state=0;
+			                j=0;
+
                        }
                        else{
                        	    break;

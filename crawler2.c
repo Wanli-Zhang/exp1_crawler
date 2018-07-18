@@ -115,8 +115,8 @@ int main(int argc, char *argv[]){
             int fd = arg->fd;
 
             recvResponse(arg, buf);
-            
-            printf("读完了%d\n%s", strlen(buf), buf);
+            printf("读完了\n");
+            //printf("读完了%d\n%s", strlen(buf), buf);
             printf("Has crawled %d pages.\n", ++page_num);
 
             if(urlsNum <= 160000) extractLink(buf, url->domain, url->number);
