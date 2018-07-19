@@ -189,3 +189,10 @@ int tr_search(TREE* tree, int uLen, char* searchURL)
         }
 	}
 }
+void freeTree(TNodePtr node)
+{
+	if(node -> next != NULL) freeTree(node -> next);
+	if(node -> left != NULL) freeTree(node -> left);
+	if(node -> right != NULL) freeTree(node -> right);
+	free(node);
+}

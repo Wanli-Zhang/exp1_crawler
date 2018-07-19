@@ -332,7 +332,7 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                        else{
 					    
                        //提取以http开头的超链接，如果以http开头去掉"http://",如果以'/'开头加上domain 
-                       if(strncmp(urlbuf, "http://news.sogou.com", 21) == 0){
+                       if(strncmp(urlbuf, "http://news.163.com", 19) == 0){
                             searchedurl=(char*)malloc(sizeof(char)*(len1 - 7 + 1));
 			    			memset(searchedurl,0,sizeof(char)*(len1 - 7 + 1));
                             int copy_i = 0;

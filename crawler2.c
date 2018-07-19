@@ -164,7 +164,8 @@ int main(int argc, char *argv[]){
 	}
 	close(epfd);
 	B_free(bf);
-
+	freeTree(tree -> root);
+	free(tree);
 	fclose(ffp);
 	
 	mergeFiles();
