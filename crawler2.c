@@ -21,6 +21,7 @@ FILE *ffp;
 
 void putlinks2queue(char *links, int count);
 void addurl2queue(Url * url);
+void mergeFiles();
 
 extern void ngethostbyname(unsigned char* , unsigned char*);
 extern void get_dns_servers();
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]){
 	if (argc != 4) {
 		printf
 		    ("Usage: ./crawler domain port url.txt\n"
-		     "For example:./crawler news.sogou.com 80 url.txt\n");
+		     "For example:./crawler news.ifeng.com 80 url.txt\n");
 		return 0;
 	}
 	chdir("pagecrawler");
@@ -128,7 +129,7 @@ int main(int argc, char *argv[]){
 
 
 
-            int add_connect = url_queue.size() < (500 - connect_pending) ? url_queue.size() : (500 - connect_pending);
+            int add_connect = url_queue.size() < (200 - connect_pending) ? url_queue.size() : (200 - connect_pending);
             for (i = 0; i < add_connect; ++i) {
                 if (url_queue.empty()){
                     //usleep(1000);
@@ -166,7 +167,7 @@ int main(int argc, char *argv[]){
 
 	fclose(ffp);
 	
-
+	mergeFiles();
 
 }
 
@@ -218,6 +219,61 @@ void addurl2queue(Url * url)
 	printf("%s%s已放入待爬取队列\n",url->domain,url->path);
 }
 
+void mergeFile()
+{
+	FILE *fp;
+	FILE *fp2;
+
+	fp = fopen("relation.txt","rt");
+	if(fp == NULL){
+        printf("relation File open error!\n");
+        
+    }
+    
+	fp2 = fopen("out.txt","a");
+	if(fp2 == NULL){
+        printf("out File open error!\n");
+        
+    }
+    fprintf(fp2, "\n");
+   
+	
+	int i=0,j=0;
+	int record=0;
+	int flag=0;
+	int first =0;
+	int currentNum=0;
+	int num[10000];
+	while(!feof(fp)){
+		fscanf(fp,"%d",&record);
+		
+		num[i]=record;
+		if(i%2==0 && record!=currentNum){
+			//printf("首位变了\n");
+			currentNum=record;
+			memset(num,0,sizeof(num));
+			num[0]=record;
+			i=0;
+		}
+		else if(i%2==1 && num[i-1]==currentNum){
+			//printf("首位为 %d\n",currentNum) ;
+			printf("record %d\n",num[i]);
+			for(j=1;j<=i-2;j=j+2){
+				if(num[i]==num[j]){
+					flag=1;
+					break;
+				}
+			}
+			if(flag==0){
+				 printf("写入文件\n");
+				fprintf(fp2, "%d %d\n", currentNum,num[i]);
+			}
+			flag=0;
+		}
+		i++;
+	}
+
+}
 
 
 
