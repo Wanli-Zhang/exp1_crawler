@@ -105,6 +105,12 @@ int main(int argc, char *argv[]){
             fprintf(logfd, "The %d ask processed in %f seconds\n \
                         %d epoll_wait has been processed.\n \
                         Queue Size : %d\n", ++ask_num, duration, n, 					url_queue.size());
+		B_free(bf);
+		freeTree(tree -> root);
+		free(tree);
+		fclose(ffp);
+	
+		mergeFiles();
             return 0;
         }
         printf("有%d个sockfd准备就绪\n", n);
