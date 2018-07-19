@@ -161,6 +161,7 @@ void linkRelationship(char* newLink, int currentNum){
 		int id = tr_search(tree, strlen(newLink), newLink); 
 		if( id == -1 )
 		{
+			if(urlsNum < MAX_LINK){ 
 			printf("bloom判断不存在,第%d条\n", urlsNum);
 			strcpy(links[urlsNum], newLink);//插入链接列表 
 			
@@ -177,6 +178,11 @@ void linkRelationship(char* newLink, int currentNum){
 			//printf("输出到关系文件\n");
 			fclose(fp);
 			urlsNum++;
+			}
+			else{
+				fclose(fp);
+				return; 
+			} 
 		}
 		else{
 			printf("相应编号:%d\n",id);
@@ -332,7 +338,7 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                        else{
 					    
                        //提取以http开头的超链接，如果以http开头去掉"http://",如果以'/'开头加上domain 
-                       if(strncmp(urlbuf, "http://news.163.com", 19) == 0){
+                       if(strncmp(urlbuf, "http://news.sohu.com", 20) == 0){
                             searchedurl=(char*)malloc(sizeof(char)*(len1 - 7 + 1));
 			    			memset(searchedurl,0,sizeof(char)*(len1 - 7 + 1));
                             int copy_i = 0;
