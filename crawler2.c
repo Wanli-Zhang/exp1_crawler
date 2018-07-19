@@ -7,9 +7,7 @@
 
 #define MAX_QUEUE_SIZE 200000
 
-/*zhushi*/
-/*zhushi!!!*/
-/*zhushi3*/
+
 struct epoll_event ev, events[2560];	//ev用于注册事件，events数组用于回传要处理的事件
 queue < Url * >url_queue;
 int epfd;
@@ -33,7 +31,7 @@ int main(int argc, char *argv[]){
 	
 	bf=B_init(16 * 160000,NULL); //初始化过滤器 
 /**********************************/	
-	ffp = fopen("out.txt","a");
+	ffp = fopen(argv[3],"w");
 
 
 	tree = tr_alloc();
@@ -66,7 +64,7 @@ int main(int argc, char *argv[]){
    	}
 	urlsNum = 0;
 	strcpy(links[urlsNum], argv[1]);
-	fprintf(ffp, "%d %s\n", urlsNum, links[urlsNum]);
+	fprintf(ffp, "%s %d\n", links[urlsNum], urlsNum);
 	B_set(bf,argv[1],strlen(argv[1])); 
 	tr_add_string(tree, argv[1], strlen(argv[1]), urlsNum);
 	putlinks2queue(argv[1], urlsNum++);	/*把用户命令行提供的link放入待爬取url队列 */

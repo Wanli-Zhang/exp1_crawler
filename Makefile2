@@ -5,4 +5,4 @@ crawler2: crawler2.o
 	$(CC) -g -o $@ $< -levent -lz
 crawler2.o: crawler2.c bloom2.h ternaryTree.h url2.h http2.h dns.h
 clean:
-	-rm crawler2.o crawler2 pagecrawler/*
+	-rm crawler2.o crawler2 pagecrawler/* *.txt

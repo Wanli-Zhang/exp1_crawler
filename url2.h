@@ -114,7 +114,7 @@ void getHRfromlink(char *link, char *host, char *resource)
 		strcpy(resource, p);
 		resource[plen] = '\0';
 	}
-	printf("从link得到host=%s\tresource=%s\n",host,resource);
+	//printf("从link得到host=%s\tresource=%s\n",host,resource);
 }
 
 
@@ -156,7 +156,7 @@ void linkRelationship(char* newLink, int currentNum){
 	int bloom =  bloomFilter(newLink);
 	
 	if(bloom == 1){ //链接列表中存在，找到相应编号 
-		printf("bloom判断存在\n"); 
+		printf("bloom判断存在,第%d条\n", urlsNum); 
 		int id = tr_search(tree, strlen(newLink), newLink); 
 		printf("相应编号:%d\n",id);
 		fprintf(fp, "%d %d\n", currentNum, id);
@@ -166,10 +166,10 @@ void linkRelationship(char* newLink, int currentNum){
 	else{ //不存在 
 		
 		if(urlsNum < MAX_LINK){ 
-			printf("bloom判断不存在\n");
+			printf("bloom判断不存在,第%d条\n", urlsNum);
 			strcpy(links[urlsNum], newLink);//插入链接列表 
 			
-			fprintf(ffp, "%d %s\n", urlsNum, links[urlsNum]);
+			fprintf(ffp, "%s %d\n", links[urlsNum], urlsNum);
 	
 			/*int i;
 			printf("当前链接列表：\n");
@@ -200,11 +200,12 @@ int extractLink(char* currentpage, char* domain, int currentNum){
     char currentchar;
     char urlbuf[MAX_PATH_LENGTH];
     char *searchedurl;
+    char checkurl[5];
 
     FILE *fp;
-    fp = fopen("page.txt","a");
-    fprintf(fp, "%s", currentpage);
-    fclose(fp);
+    //fp = fopen("page.txt","a");
+    //fprintf(fp, "%s", currentpage);
+    //fclose(fp);
 
     
     while(currentpage[i] != '\0'){
@@ -289,6 +290,25 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                        int len1 = strlen(urlbuf);
                        int len2 = strlen(domain);
                        //printf("urlbuf:%s\n",urlbuf);
+                       int m=0;
+                       //printf("urlbuf :%s\n",urlbuf);
+                       for(m=0; m<4; m++){
+                       		checkurl[m] = urlbuf[len1-m-1];
+                       		//printf("checlurl:%c\n",checkurl[m]);
+                       }
+                       
+                       if(strncmp(checkurl, "jpg", 3) == 0){
+                       		printf("jpg\n"); 
+                       		break;
+                       		
+                       }
+			else if(strncmp(checkurl, "JPG", 3) == 0){
+                       		printf("jpg\n"); 
+                       		break;
+                       		
+                       }
+                       else{
+					    
                        //提取以http开头的超链接，如果以http开头去掉"http://",如果以'/'开头加上domain 
                        if(strncmp(urlbuf, "http://news.cctv.com", 20) == 0){
                             searchedurl=(char*)malloc(sizeof(char)*(len1 - 7 + 1));
@@ -335,6 +355,7 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                        }
                        
                        break;
+                		} 
         }
         i++;
     }
