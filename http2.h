@@ -128,6 +128,7 @@ bool all_hex_char(char* str, int l, int r);
 //-1: HTTP Response非200OK
 // 1: 数据无法通过gzip解压
 // 2: 传输超时
+// 3: dechunk时找不到\r\n
 int recvResponse(Ev_arg* arg, char* buf)
 {
     char text[buff];
@@ -215,6 +216,11 @@ int recvResponse(Ev_arg* arg, char* buf)
                 if (all_hex_char(search, 2, 3))
                 {
                     char * search2 = my_strstr(search+2, search_size-2, "\r\n", 2);
+                    if (!search2)
+                    {
+                        printf("Can not find \\r\\n.");
+                        return 3;
+                    }
                     if (search2 - search - 2 <= 5 && all_hex_char(search, 2, search2-search))
                     {
                         strncpy(chunk_size_char, search + 2, search2 - search - 2);
@@ -272,12 +278,22 @@ int recvResponse(Ev_arg* arg, char* buf)
         while (last_chunk_size != 0)
         {
             pos1 = my_strstr(pos_now, len_remaining, "\r\n", 2);
+            if (!pos1)
+            {
+                printf("Can not find \\r\\n.");
+                return 3;
+            }
             pos1 += 2;
             len_remaining -= pos1 - pos_now;
             pos_now = pos1;
             if (all_hex_char(pos1, 0, 1))
             {
                 pos2 = my_strstr(pos_now, len_remaining, "\r\n", 2);
+                if (!pos2)
+                {
+                    printf("Can not find \\r\\n.");
+                    return 3;
+                }
                 if (pos2-pos1 <= 5 && all_hex_char(pos1, 0, pos2 - pos1))
                 {
                     char chunk_size_char[10];
