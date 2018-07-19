@@ -54,7 +54,7 @@ int main(int argc, char *argv[]){
 	if (argc != 4) {
 		printf
 		    ("Usage: ./crawler domain port url.txt\n"
-		     "For example:./crawler news.ifeng.com 80 url.txt\n");
+		     "For example:./crawler news.sohu.com 80 url.txt\n");
 		return 0;
 	}
 	chdir("pagecrawler");
@@ -187,7 +187,6 @@ void putlinks2queue(char *links, int num){
             		return;
 	}*/
 	//else{
-		ngethostbyname((unsigned char*)h, ipp);
             		
 		Url *tmp = (Url *) calloc(1, sizeof(Url));
 		tmp->domain = h;
