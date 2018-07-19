@@ -158,10 +158,31 @@ void linkRelationship(char* newLink, int currentNum){
 	if(bloom == 1){ //链接列表中存在，找到相应编号 
 		printf("bloom判断存在,第%d条\n", urlsNum); 
 		int id = tr_search(tree, strlen(newLink), newLink); 
-		printf("相应编号:%d\n",id);
-		fprintf(fp, "%d %d\n", currentNum, id);
-		//printf("输出到关系文件\n");
-		fclose(fp);
+		if( id == -1 )
+		{
+			printf("bloom判断不存在,第%d条\n", urlsNum);
+			strcpy(links[urlsNum], newLink);//插入链接列表 
+			
+			fprintf(ffp, "%s %d\n", links[urlsNum], urlsNum);
+	
+			/*int i;
+			printf("当前链接列表：\n");
+			for(i=0;i<=urlsNum;i++){
+				printf("%s\n",links[i]);
+			}*/
+			tr_add_string(tree, newLink, strlen(newLink), urlsNum); //插入三叉树
+			putlinks2queue(newLink, urlsNum); //插入待爬取队列 
+			fprintf(fp, "%d %d\n", currentNum, urlsNum);
+			//printf("输出到关系文件\n");
+			fclose(fp);
+			urlsNum++;
+		}
+		else{
+			printf("相应编号:%d\n",id);
+			fprintf(fp, "%d %d\n", currentNum, id);
+			//printf("输出到关系文件\n");
+			fclose(fp);
+		}
 	}
 	else{ //不存在 
 		

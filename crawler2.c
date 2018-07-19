@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
 	putlinks2queue(argv[1], urlsNum++);	/*把用户命令行提供的link放入待爬取url队列 */
 
 	epfd = epoll_create(2560);	//生成用于处理accept的epoll专用文件描述符，最多监听2560个事件
-	n = url_queue.size() < 200 ? url_queue.size() : 200;	/*最多同时放出去2500条socket连接 */
+	n = url_queue.size() < 500 ? url_queue.size() : 500;	/*最多同时放出去2500条socket连接 */
 	for (i = 0; i < n; i++) {
 		Url *url = url_queue.front();
 		int sockfd;
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]){
             //printf("读完了%d\n%s", strlen(buf), buf);
             //printf("Has crawled %d pages.\n", ++page_num);
 
-            if(urlsNum <= 160000) extractLink(buf, url->domain, url->number);
+            extractLink(buf, url->domain, url->number);
             close(fd);
 
             connect_pending--;
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]){
 
 
 
-            int add_connect = url_queue.size() < (200 - connect_pending) ? url_queue.size() : (200 - connect_pending);
+            int add_connect = url_queue.size() < (500 - connect_pending) ? url_queue.size() : (500 - connect_pending);
             for (i = 0; i < add_connect; ++i) {
                 if (url_queue.empty()){
                     //usleep(1000);
