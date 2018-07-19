@@ -187,6 +187,7 @@ void putlinks2queue(char *links, int num){
             		return;
 	}*/
 	//else{
+		ngethostbyname(h, ipp);
             		
 		Url *tmp = (Url *) calloc(1, sizeof(Url));
 		tmp->domain = h;

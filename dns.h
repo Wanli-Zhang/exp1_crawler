@@ -383,7 +383,7 @@ void get_dns_servers()
 //        }
 //    }
     
-    strcpy(dns_servers[0], "10.3.9.5");
+    strcpy(dns_servers[0], "114.114.114.114");
     printf("\nDNS server: %s\n", dns_servers[0]);
 }
 

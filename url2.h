@@ -153,6 +153,7 @@ void linkRelationship(char* newLink, int currentNum){
 	FILE *fp;
 	fp = fopen("relation.txt","a");
 	//printf("打开关系文件\n"); 
+	pretreatLink(newLink);
 	int bloom =  bloomFilter(newLink);
 	
 	if(bloom == 1){ //链接列表中存在，找到相应编号 
@@ -331,7 +332,7 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                        else{
 					    
                        //提取以http开头的超链接，如果以http开头去掉"http://",如果以'/'开头加上domain 
-                       if(strncmp(urlbuf, "http://news.ifeng.com", 21) == 0){
+                       if(strncmp(urlbuf, "http://", 7) == 0){
                             searchedurl=(char*)malloc(sizeof(char)*(len1 - 7 + 1));
 			    			memset(searchedurl,0,sizeof(char)*(len1 - 7 + 1));
                             int copy_i = 0;
