@@ -139,7 +139,7 @@ int leftshift(char *buf)
 }
 
 int bloomFilter(char* newLink){
-    	printf("进入过滤器\n"); 
+    	//printf("进入过滤器\n"); 
  
   		
 	if(B_get(bf, newLink, strlen(newLink))) { 
@@ -152,7 +152,7 @@ int bloomFilter(char* newLink){
 void linkRelationship(char* newLink, int currentNum){
 	FILE *fp;
 	fp = fopen("relation.txt","a");
-	printf("打开关系文件\n"); 
+	//printf("打开关系文件\n"); 
 	int bloom =  bloomFilter(newLink);
 	
 	if(bloom == 1){ //链接列表中存在，找到相应编号 
@@ -160,7 +160,7 @@ void linkRelationship(char* newLink, int currentNum){
 		int id = tr_search(tree, strlen(newLink), newLink); 
 		printf("相应编号:%d\n",id);
 		fprintf(fp, "%d %d\n", currentNum, id);
-		printf("输出到关系文件\n");
+		//printf("输出到关系文件\n");
 		fclose(fp);
 	}
 	else{ //不存在 
@@ -171,15 +171,15 @@ void linkRelationship(char* newLink, int currentNum){
 			
 			fprintf(ffp, "%d %s\n", urlsNum, links[urlsNum]);
 	
-			int i;
+			/*int i;
 			printf("当前链接列表：\n");
 			for(i=0;i<=urlsNum;i++){
 				printf("%s\n",links[i]);
-			}
+			}*/
 			tr_add_string(tree, newLink, strlen(newLink), urlsNum); //插入三叉树
 			putlinks2queue(newLink, urlsNum); //插入待爬取队列 
 			fprintf(fp, "%d %d\n", currentNum, urlsNum);
-			printf("输出到关系文件\n");
+			//printf("输出到关系文件\n");
 			fclose(fp);
 			urlsNum++;
 		}

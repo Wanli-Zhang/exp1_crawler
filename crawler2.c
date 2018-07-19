@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
 	putlinks2queue(argv[1], urlsNum++);	/*把用户命令行提供的link放入待爬取url队列 */
 
 	epfd = epoll_create(2560);	//生成用于处理accept的epoll专用文件描述符，最多监听2560个事件
-	n = url_queue.size() < 2500 ? url_queue.size() : 2500;	/*最多同时放出去2500条socket连接 */
+	n = url_queue.size() < 200 ? url_queue.size() : 200;	/*最多同时放出去2500条socket连接 */
 	for (i = 0; i < n; i++) {
 		Url *url = url_queue.front();
 		int sockfd;
@@ -115,68 +115,22 @@ int main(int argc, char *argv[]){
             Ev_arg *arg = (Ev_arg *) (events[i].data.ptr);
             Url * url = arg->url;
             int fd = arg->fd;
-
+	printf("收到[%s%s]的响应\n", url->domain, url->path);
             recvResponse(arg, buf);
+	
             printf("读完了\n");
             //printf("读完了%d\n%s", strlen(buf), buf);
-            printf("Has crawled %d pages.\n", ++page_num);
+            //printf("Has crawled %d pages.\n", ++page_num);
 
             if(urlsNum <= 160000) extractLink(buf, url->domain, url->number);
             close(fd);
 
             connect_pending--;
         }
-/*
-            while (1) {
-                need = sizeof(buf) - 1 - ll;
-                read_length = read(fd, buf, need);
-                if (read_length < 0) {
-                    if (errno == EAGAIN) {
-                        usleep(1000);
-                        continue;
-                    } else {
-                        fprintf(stderr, "读取http响应发生错误\n");
-                        //freeUrl(url);
-                        break;
-                    }
-                } else if (read_length == 0) {	/*读取http响应这完毕 */
-/*
-		
-printf("读完了\n");
-		extractLink2(fn);
-                    break;
-                } else {
-                    char *fn = link2fn(url);	/*以url作为文件名，斜线转换为下划线 */
-/*                    if((strstr(buf, "404 Not") == NULL)  && (strstr(buf, "301 Moved") == NULL)
-                        && (strstr(buf, "403 Forb") == NULL) && (strstr(fn, ".jpg") == NULL)){
-                        /*以只写方式打开html文件 */
-
- /*                       int htmlfd = open(fn, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			
-                        if (htmlfd < 0) {
-                            fprintf(stderr,"函数recvResponse()中%s文件打开失败\n%s\t%s\n",
-                                fn, url->domain, url->path);
-                            //freeUrl(url);
-
-                            break;
-                        }
-                        else{
-                            write(htmlfd, buf, read_length);
-
-                            
-
-                            close(htmlfd);
-
-                            printf("Has crawled %d pages.\n", ++page_num);
-                        }
-                    }
-                    free(fn);
-                    //break;
-                }
-            }*/
 
 
-            int add_connect = url_queue.size() < (2500 - connect_pending) ? url_queue.size() : (2500 - connect_pending);
+
+            int add_connect = url_queue.size() < (200 - connect_pending) ? url_queue.size() : (200 - connect_pending);
             for (i = 0; i < add_connect; ++i) {
                 if (url_queue.empty()){
                     //usleep(1000);
