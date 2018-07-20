@@ -335,11 +335,29 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                        
                        if(strncmp(checkurl, "jpg", 3) == 0){
                        		//printf("jpg\n"); 
+				state=0;
+                            	j=0;
                        		break;
                        		
                        }
 			else if(strncmp(checkurl, "JPG", 3) == 0){
-                       		//printf("jpg\n"); 
+                       		//printf("jpg\n");
+				state=0;
+                            	j=0; 
+                       		break;
+                       		
+                       }
+			else if(strncmp(checkurl, "swf", 3) == 0){
+                       		//printf("jpg\n");
+				state=0;
+                            	j=0; 
+                       		break;
+                       		
+                       }
+			else if(strncmp(checkurl, "xml", 3) == 0){
+                       		//printf("jpg\n");
+				state=0;
+                            	j=0; 
                        		break;
                        		
                        }
