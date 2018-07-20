@@ -115,6 +115,14 @@ void getHRfromlink(char *link, char *host, char *resource)
 		resource[plen] = '\0';
 	}
 	//printf("从link得到host=%s\tresource=%s\n",host,resource);
+	 int i = 0;
+        while(link[i] != '\0'){
+                if(link[i] == '\n'){
+                        for(int j = i + 1; j < strlen(link); j++) link[j-1]=link[j];
+                }
+		i++;
+        }
+
 }
 
 
@@ -157,12 +165,12 @@ void linkRelationship(char* newLink, int currentNum){
 	int bloom =  bloomFilter(newLink);
 	
 	if(bloom == 1){ //链接列表中存在，找到相应编号 
-		printf("bloom判断存在,第%d条\n", urlsNum); 
+		//printf("bloom判断存在,第%d条\n", urlsNum); 
 		int id = tr_search(tree, strlen(newLink), newLink); 
 		if( id == -1 )
 		{
 			if(urlsNum < MAX_LINK){ 
-			printf("bloom判断不存在,第%d条\n", urlsNum);
+			//printf("bloom判断不存在,第%d条\n", urlsNum);
 			strcpy(links[urlsNum], newLink);//插入链接列表 
 			
 			fprintf(ffp, "%s %d\n", links[urlsNum], urlsNum);
@@ -185,7 +193,7 @@ void linkRelationship(char* newLink, int currentNum){
 			} 
 		}
 		else{
-			printf("相应编号:%d\n",id);
+			//printf("相应编号:%d\n",id);
 			fprintf(fp, "%d %d\n", currentNum, id);
 			//printf("输出到关系文件\n");
 			fclose(fp);
@@ -230,10 +238,10 @@ int extractLink(char* currentpage, char* domain, int currentNum){
     char *searchedurl;
     char checkurl[5];
 
-    FILE *fp;
-    //fp = fopen("page.txt","a");
-    //fprintf(fp, "%s", currentpage);
-    //fclose(fp);
+    /*FILE *fp;
+    fp = fopen("page.txt","a");
+    fprintf(fp, "%s", currentpage);
+    fclose(fp);*/
 
     
     while(currentpage[i] != '\0'){
@@ -326,12 +334,12 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                        }
                        
                        if(strncmp(checkurl, "jpg", 3) == 0){
-                       		printf("jpg\n"); 
+                       		//printf("jpg\n"); 
                        		break;
                        		
                        }
 			else if(strncmp(checkurl, "JPG", 3) == 0){
-                       		printf("jpg\n"); 
+                       		//printf("jpg\n"); 
                        		break;
                        		
                        }
@@ -347,15 +355,15 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                             }
                             searchedurl[copy_i] = '\0';
                             //putlinks2queue(&searchedurl, 1);
-                            printf("1 进入extract提取链接\n"); 
-                            printf("searchedurl:%s\n",searchedurl);
+                            //printf("1 进入extract提取链接\n"); 
+                            //printf("searchedurl:%s\n",searchedurl);
                             linkRelationship(searchedurl, currentNum); 
                             
                             state=0;
                             j=0;
                        }
 
-						else if(strncmp(urlbuf, "/", 1) == 0){
+						else if(strncmp(urlbuf, "/", 1) == 0 && strncmp(urlbuf, "//", 2) != 0){
 							
 							searchedurl=(char*)malloc(sizeof(char)*(len1 +len2 + 1));
 							memset(searchedurl,0,sizeof(char)*(len1 +len2 + 1));
@@ -370,8 +378,8 @@ int extractLink(char* currentpage, char* domain, int currentNum){
 							
 							searchedurl[len1+len2] = '\0';
 			                           
-			                printf("2 进入extract提取链接\n"); 
-			                printf("searchedurl:%s\n",searchedurl);
+			                //printf("2 进入extract提取链接\n"); 
+			                //printf("searchedurl:%s\n",searchedurl);
 			                linkRelationship(searchedurl, currentNum);
 			                            
 			                state=0;

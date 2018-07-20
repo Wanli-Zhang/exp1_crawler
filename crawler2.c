@@ -83,7 +83,7 @@ int main(int argc, char *argv[]){
 		arg->fd = sockfd;
 		ev.data.ptr = arg;
 		ev.events = EPOLLIN | EPOLLET;	//设置要处理的事件类型。可读，边缘触发
-		printf("将要把%d: [%s%s]放入epoll\n", sockfd, url->domain, url->path);
+		//printf("将要把%d: [%s%s]放入epoll\n", sockfd, url->domain, url->path);
 		epoll_ctl(epfd, EPOLL_CTL_ADD, sockfd, &ev);	//注册ev
 		url_queue.pop();
 	}
@@ -120,10 +120,10 @@ int main(int argc, char *argv[]){
             Ev_arg *arg = (Ev_arg *) (events[i].data.ptr);
             Url * url = arg->url;
             int fd = arg->fd;
-	printf("收到[%s%s]的响应\n", url->domain, url->path);
+	//printf("收到[%s%s]的响应\n", url->domain, url->path);
             recvResponse(arg, buf);
 	
-            printf("读完了\n");
+            //printf("读完了\n");
             //printf("读完了%d\n%s", strlen(buf), buf);
             //printf("Has crawled %d pages.\n", ++page_num);
 
@@ -154,7 +154,7 @@ int main(int argc, char *argv[]){
                 arg->fd = sockfd;
                 ev.data.ptr = arg;
                 ev.events = EPOLLIN | EPOLLET;	//设置要处理的事件类型。可读，边缘触发
-                printf("将要把%d: [%s%s]放入epoll\n", sockfd, url->domain, url->path);
+                //printf("将要把%d: [%s%s]放入epoll\n", sockfd, url->domain, url->path);
                 epoll_ctl(epfd, EPOLL_CTL_ADD, sockfd, &ev);	//注册ev
                 url_queue.pop();
             }
@@ -184,7 +184,7 @@ void putlinks2queue(char *links, int num){
 	char *h = (char *)calloc(MAX_LINK_LEN, 1);
 	char *r = (char *)calloc(MAX_LINK_LEN, 1);
 	char *iipp = (char *)calloc(20, 1);
-	pretreatLink(links);
+	
 	if (links == NULL) return;
 	getHRfromlink(links, h, r);
 	/*if(strcmp(h, "news.sogou.com") != 0){
@@ -223,10 +223,10 @@ void addurl2queue(Url * url)
 		return;
 	}
 	url_queue.push(url);
-	printf("%s%s已放入待爬取队列\n",url->domain,url->path);
+	//printf("%s%s已放入待爬取队列\n",url->domain,url->path);
 }
 
-void mergeFile()
+void mergeFiles()
 {
 	FILE *fp;
 	FILE *fp2;
@@ -264,7 +264,7 @@ void mergeFile()
 		}
 		else if(i%2==1 && num[i-1]==currentNum){
 			//printf("首位为 %d\n",currentNum) ;
-			printf("record %d\n",num[i]);
+			//printf("record %d\n",num[i]);
 			for(j=1;j<=i-2;j=j+2){
 				if(num[i]==num[j]){
 					flag=1;
@@ -272,7 +272,7 @@ void mergeFile()
 				}
 			}
 			if(flag==0){
-				 printf("写入文件\n");
+				 //printf("写入文件\n");
 				fprintf(fp2, "%d %d\n", currentNum,num[i]);
 			}
 			flag=0;
