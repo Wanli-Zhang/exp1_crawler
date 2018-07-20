@@ -242,6 +242,7 @@ void mergeFiles()
         printf("out File open error!\n");
         
     }
+	printf("wenjian\n");
     fprintf(fp2, "\n");
    
 	

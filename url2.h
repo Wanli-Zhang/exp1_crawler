@@ -333,28 +333,28 @@ int extractLink(char* currentpage, char* domain, int currentNum){
                        		//printf("checlurl:%c\n",checkurl[m]);
                        }
                        
-                       if(strncmp(checkurl, "jpg", 3) == 0){
+                       if(strncmp(checkurl, "gpj", 3) == 0){
                        		//printf("jpg\n"); 
 				state=0;
                             	j=0;
                        		break;
                        		
                        }
-			else if(strncmp(checkurl, "JPG", 3) == 0){
+			else if(strncmp(checkurl, "GPJ", 3) == 0){
                        		//printf("jpg\n");
 				state=0;
                             	j=0; 
                        		break;
                        		
                        }
-			else if(strncmp(checkurl, "swf", 3) == 0){
+			else if(strncmp(checkurl, "fws", 3) == 0){
                        		//printf("jpg\n");
 				state=0;
                             	j=0; 
                        		break;
                        		
                        }
-			else if(strncmp(checkurl, "xml", 3) == 0){
+			else if(strncmp(checkurl, "lmx", 3) == 0){
                        		//printf("jpg\n");
 				state=0;
                             	j=0; 
